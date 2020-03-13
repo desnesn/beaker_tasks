@@ -37,12 +37,12 @@ rlJournalStart
 
 	rlRun "git clone https://github.com/linux-test-project/ltp.git" 0 "Clonning upstream LTP testsuite"
         rlRun "pushd $LTP_DIR"
-	# rlRun "make autotools && ./configure && make && make install" 0 "Compiling and Installing LTP testsuite"
+	rlRun "make autotools && ./configure && make all && make install" 0 "Compiling and Installing LTP testsuite"
     rlPhaseEnd
 
     rlPhaseStartTest
-        # rlRun "/opt/ltp/runltp" 0 "Running LTP"
-	rlRun "$LTP_DIR/runltp" 0 "Running LTP"
+        rlRun "/opt/ltp/runltp" 0 "Running LTP"
+	# rlRun "$LTP_DIR/runltp" 0 "Running LTP"
     rlPhaseEnd
 
     rlPhaseStartCleanup
