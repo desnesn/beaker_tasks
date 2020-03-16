@@ -25,11 +25,10 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-rlRpmInstall beakerlib
-rlRpmInstall restraint-client
-
 # Include Beaker environment
 . /usr/bin/rhts-environment.sh || exit 1
+rlRpmInstall beakerlib
+rlRpmInstall restraint-client
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 
 # PACKAGE="git"
