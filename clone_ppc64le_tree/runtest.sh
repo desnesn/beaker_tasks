@@ -25,21 +25,25 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+rlRpmInstall beakerlib
+rlRpmInstall restraint-client
+
 # Include Beaker environment
 . /usr/bin/rhts-environment.sh || exit 1
 . /usr/share/beakerlib/beakerlib.sh || exit 1
 
-PACKAGE="git"
+# PACKAGE="git"
 FOLDER="/root/linux-powerpc/"
 
 rlJournalStart
     rlPhaseStartSetup
 
+	# rlRpmInstall git
     	# Just to remember the syntax
-	if ! rlCheckRpm $PACKAGE; then
-		rlRpmInstall $PACKAGE
-		rlAssertRpm $PACKAGE
-	fi
+	# if ! rlCheckRpm $PACKAGE; then
+	#	rlRpmInstall $PACKAGE
+	#	rlAssertRpm $PACKAGE
+	# fi
 
 	if $(lsb_release -d | grep 7) -eq 0 ; then
 		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc python-devel newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux" 0 "Downloading all dependencies to build upstream powerpc kernel on RHEL7"
