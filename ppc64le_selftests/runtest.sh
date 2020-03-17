@@ -54,6 +54,7 @@ rlJournalStart
 		rlShowRunningKernel
 
 		# now we need the kernel src rpm
+		IFS=- read -a UNAME <<<$(uname -r)
 		ARCH=$(uname -i)
 		VERSION=${UNAME[0]}
 		RELEASE=${UNAME[1]%%.$ARCH}
