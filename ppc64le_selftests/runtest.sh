@@ -76,11 +76,20 @@ rlJournalStart
 		# thus OUTPUT is not set, and the whole build fails.
 		rlRun "make -C tools/testing/selftests/powerpc run_tests MAKELEVEL=0 >>$SELFTESTSLOG 2>&1" 0 "Running powerpc selftests"
 		
+		if lscpu | grep -q 'POWER9';then
+			CPU=$(echo "POWER9 system" $SELFTESTLOG)
+		else
+			CPU=$(echo "POWER8 system" $SELFTESTLOG)
+		fi
+		HOSTNAME=$(echo `hostname` $SELFTESTLOG)
 		PASSED=$(grep -c 'PASS' $SELFTESTSLOG)
 		FAILED=$(grep -c 'FAIL' $SELFTESTSLOG)
 		SKIPPED=$(grep -c 'SKIP' $SELFTESTSLOG)
 		
 		rlAssert0 "Assert 0 tests failed" $FAILED
+		
+		rlLog "$CPU"
+		rlLog "$HOSTNAME"
 		rlLog "Passed tests: $PASSED"
 		rlLog "Failed tests: $FAILED"
 		rlLog "Skipped tests: $SKIPPED"
