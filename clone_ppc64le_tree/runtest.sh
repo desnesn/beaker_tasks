@@ -35,7 +35,8 @@ FOLDER="/root/linux-powerpc/"
 rlJournalStart
     rlPhaseStartSetup
 
-	rlRpmInstall restraint-client
+	# rlRpmInstall restraint-client
+	# rlRpmInstall redhat-lsb-core
 
 	# rlRpmInstall git
     	# Just to remember the syntax
@@ -44,7 +45,7 @@ rlJournalStart
 	#	rlAssertRpm $PACKAGE
 	# fi
 
-	if $(lsb_release -d | grep 7) -eq 0 ; then
+	if $(cat /etc/redhat-release | grep " 7") -eq 0 ; then
 		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc python-devel newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux" 0 "Downloading all dependencies to build upstream powerpc kernel on RHEL7"
 	else
 		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux kabi-dw python3-devel python3-docutils net-tools xmlto asciidoc python3-devel python3-docutils newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel kabi-dw ncurses-devel openssl-devel" 0 "Downloading all dependencies to build kernel on RHEL8"
@@ -56,16 +57,16 @@ rlJournalStart
         rlRun "git clone git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git $FOLDER" 0 "Cloning git tree"
 
         rlAssertExists "$FOLDER"
+
 	rlRun "pushd $FOLDER"
-
-	rlRun "git checkout --track -b fixes origin/fixes"
-	rlRun "git checkout --track -b next origin/next"
-
+	git checkout --track -b fixes origin/fixes
+	git checkout --track -b next origin/next
 	git checkout master
+	rlRun "popd"
+
     rlPhaseEnd
 
     rlPhaseStartCleanup
-    	rlRun "popd"
     rlPhaseEnd
 rlJournalPrintText
 rlJournalEnd
