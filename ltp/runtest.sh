@@ -41,8 +41,11 @@ rlJournalStart
     rlPhaseEnd
 
     rlPhaseStartTest
-        rlRun "/opt/ltp/runltp" 0 "Running LTP"
-	# rlRun "$LTP_DIR/runltp" 0 "Running LTP"
+        rlRun "/opt/ltp/runltp -p -l /mnt/testarea/result.log -o /mnt/testarea/result-output.log -C /mnt/testarea/result.fail.log" 0 "Running LTP"
+
+	rlFileSubmit /mnt/testarea/result.log
+	rlFileSubmit /mnt/testarea/result-output.log
+	rlFileSubmit /mnt/testarea/result.fail.log
     rlPhaseEnd
 
     rlPhaseStartCleanup
