@@ -2,7 +2,7 @@
 # vim: dict+=/usr/share/beakerlib/dictionary.vim cpt=.,w,b,u,t,i,k
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-#   runtest.sh of /tools/ltp/.
+#   runtest.sh of /stress/ltp/.
 #   Description: Compiles, installs and runs the latest LTP upstream testsuite
 #   Author: Desnes Augusto Nunes do Rosario <desnesn@br.ibm.com>
 #

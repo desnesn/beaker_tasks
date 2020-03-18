@@ -1,6 +1,6 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-#   Makefile of /tools/ltp/.
+#   Makefile of /stress/ltp/.
 #   Description: Compiles, installs and runs the latest LTP upstream testsuite
 #   Author: Desnes Augusto Nunes do Rosario <desnesn@br.ibm.com>
 #
@@ -23,7 +23,7 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-export TEST=/tools/ltp/.
+export TEST=/stress/ltp/.
 export TESTVERSION=1.0
 
 BUILT_FILES=
