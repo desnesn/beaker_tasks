@@ -68,7 +68,10 @@ rlJournalStart
 	
 	rlPhaseStartTest
 		cd linux-${VERSION}-${RELEASE}/
-		SELFTESTSLOG=$(mktemp /mnt/testarea/selftests.XXXXXX)
+		# SELFTESTSLOG=$(mktemp /mnt/testarea/selftests.XXXXXX)
+		SELFTESTSLOG=/mnt/testarea/selftests.output
+		SELFTESTSPASS=/mnt/testarea/selftests.pass
+		SELFTESTSFAIL=/mnt/testarea/selftests.fail
 		# MAKELEVEL=0 is needed to fool the kernel's tools/testing/selftests/lib.mk
 		#   ifeq (0,$(MAKELEVEL))
 		#   OUTPUT := $(shell pwd)
@@ -96,6 +99,12 @@ rlJournalStart
 		rlLog "Skipped tests: $SKIPPED"
 		
 		rlFileSubmit $SELFTESTSLOG
+
+		cat $SELFTESTSLOG | grep PASS > $SELFTESTSPASS
+		cat $SELFTESTSLOG | grep FAIL > $SELFTESTSFAIL
+
+		rlFileSubmit $SELFTESTSPASS
+		rlFileSubmit $SELFTESTSFAIL
 	rlPhaseEnd
 	
 	rlPhaseStartCleanup
