@@ -33,13 +33,14 @@ HTX_DIR="/root/HTX"
 
 rlJournalStart
     rlPhaseStartSetup
-	rlRun "yum groupinstall -y \"Development Tools\" && yum -y install git vim wget ncurses-devel libcxl libcxl-devel libocxl libocxl-devel dapl-devel net-tools"  
-	rlRun "pushd $HTX_DIR"
-	rlRun "make all && make tar"
-	rlRun "tar xvf htx_package.tar.gz"
-	rlRun "cd htx_package"
-	rlRun "./installer.sh -f"
-	rlRun "popd"
+	rlRun "yum groupinstall -y \"Development Tools\" && yum -y install git vim wget ncurses-devel libcxl libcxl-devel libocxl libocxl-devel dapl-devel net-tools" 0 "Downloading HTX build and install dependencies"
+	rlRun "git clone https://www.github.com/open-power/HTX" 0 "Cloning HTX git repo"
+	pushd $HTX_DIR
+	make all && make tar
+	tar xvf htx_package.tar.gz
+	cd htx_package
+	./installer.sh -f
+	popd
     rlPhaseEnd
 
     rlPhaseStartTest

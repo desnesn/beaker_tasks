@@ -45,15 +45,21 @@ rlJournalStart
 	#	rlAssertRpm $PACKAGE
 	# fi
 
-	major=$(cat /etc/redhat-release | grep -o ' 8' | cut -c 2-)
+	if [ "$(cat /etc/redhat-release | grep -oh "Red Hat")" == "Red Hat" ]; then
+		major=$(cat /etc/redhat-release | grep -oh "[0-9]*[\.]*[0-9]*" | cut -c -1)
+	elif [ "$(cat /etc/redhat-release | grep -oh "Fedora")" == "Fedora" ]; then
+		major=$(cat /etc/redhat-release | grep -oh "[0-9]*[0-9]*")
+	else
+		major="?"
+	fi
 
-	if [ $major -eq 7 ] ; then
+	if [ $major == "7" ] ; then
 		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc python-devel newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-
 		devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux" 0 "Installing all dependencies to build upstream powerpc kernel on RHEL7"
-	elif [ $major -eq 8 ] ; then
+	elif [ $major == "8" ] ; then
 		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux kabi-dw python3-devel python3-docutils net-tools xmlto asciidoc python3-devel python3-docutils newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel kabi-dw ncurses-devel openssl-devel" 0 "Installing all dependencies to build upstream powerpc kernel on RHEL8"
 	else
-		rlRun "yum groupinstall -y \"Development Tools\"" 0 "Installing just Development Tools to unknown RHEL distro release"
+		rlRun "yum groupinstall -y \"Development Tools\"" 0 "Installing just Development Tools to unknown RHEL-based distro release"
 	fi
 
     rlPhaseEnd
