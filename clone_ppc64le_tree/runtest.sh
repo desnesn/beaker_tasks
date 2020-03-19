@@ -45,23 +45,28 @@ rlJournalStart
 	#	rlAssertRpm $PACKAGE
 	# fi
 
-	if $(cat /etc/redhat-release | grep " 7") -eq 0 ; then
-		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc python-devel newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux" 0 "Downloading all dependencies to build upstream powerpc kernel on RHEL7"
+	major=$(cat /etc/redhat-release | grep -o ' 8' | cut -c 2-)
+
+	if [ $major -eq 7 ] ; then
+		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc python-devel newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-
+		devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux" 0 "Installing all dependencies to build upstream powerpc kernel on RHEL7"
+	elif [ $major -eq 8 ] ; then
+		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux kabi-dw python3-devel python3-docutils net-tools xmlto asciidoc python3-devel python3-docutils newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel kabi-dw ncurses-devel openssl-devel" 0 "Installing all dependencies to build upstream powerpc kernel on RHEL8"
 	else
-		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux kabi-dw python3-devel python3-docutils net-tools xmlto asciidoc python3-devel python3-docutils newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel kabi-dw ncurses-devel openssl-devel" 0 "Downloading all dependencies to build kernel on RHEL8"
+		rlRun "yum groupinstall -y \"Development Tools\"" 0 "Installing just Development Tools to unknown RHEL distro release"
 	fi
 
     rlPhaseEnd
 
     rlPhaseStartTest
-        rlRun "git clone git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git $FOLDER" 0 "Cloning git tree"
+        rlRun "git clone git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git $FOLDER" 0 "Cloning git powerpc tree"
 
         rlAssertExists "$FOLDER"
 
 	rlRun "pushd $FOLDER"
-	git checkout --track -b fixes origin/fixes
-	git checkout --track -b next origin/next
-	git checkout master
+	rlRun "git checkout --track -b fixes origin/fixes" 0 "Checking out fixes branch"
+	rlRun "git checkout --track -b next origin/next" 0 "Checkin out next branch"
+	rlRun "git checkout master" 0 "Checking out master branch again"
 	rlRun "popd"
 
     rlPhaseEnd
