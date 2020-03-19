@@ -33,13 +33,38 @@ HTX_DIR="/root/HTX"
 
 rlJournalStart
     rlPhaseStartSetup
-	rlRun "yum groupinstall -y \"Development Tools\" && yum -y install git vim wget ncurses-devel libcxl libcxl-devel libocxl libocxl-devel dapl-devel net-tools" 0 "Downloading HTX build and install dependencies"
-	rlRun "git clone https://www.github.com/open-power/HTX" 0 "Cloning HTX git repo"
+	rlRun "yum groupinstall -y \"Development Tools\" && yum -y install git vim wget libcxl-devel libocxl-devel ncurses-devel net-tools" 0 "Downloading HTX build and install dependencies"
+	rlRun "git clone https://www.github.com/open-power/HTX.git" 0 "Cloning HTX git repo"
 	pushd $HTX_DIR
-	make all && make tar
-	tar xvf htx_package.tar.gz
+
+        if [ "$(cat /etc/redhat-release | grep -oh "Red Hat")" == "Red Hat" ]; then
+		version=$(cat /etc/redhat-release | grep -oh "[0-9]*[\.]*[0-9]*" | sed -e 's/\.//')
+		if [ "$(uname -r | grep -oh "le")" == "le" ]; then
+			htx_str="htxrhel${version}le"
+		else
+			htx_str="htxrhel${version}"
+		fi
+	elif [ "$(cat /etc/redhat-release | grep -oh "Fedora")" == "Fedora" ]; then
+		version=$(cat /etc/redhat-release | grep -oh "[0-9]*[0-9]*")
+		if [ "$(uname -r | grep -oh "le")" == "le" ]; then
+			htx_str="htxfedora${version}le"
+		else
+			htx_str="htxfedora${version}"
+		fi
+	else
+		htx_str="htxsles12"
+	fi
+	# else
+	# 	htx_str="htxubuntu"
+	# fi
+
+	sed -i "s/HTX_RELEASE=\"htxubuntu\"/HTX_RELEASE=\"${htx_str}\"/" htx.mk
+	sed -i 's/TOPDIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))/TOPDIR=\/root\/HTX/' htx.mk
+
+	rlRun "make clean && make all && make tar" 0 "Compiling HTX"
+	tar --touch -xvzf htx_package.tar.gz
 	cd htx_package
-	./installer.sh -f
+	rlRun "./installer.sh -f" 0 "Installing HTX"
 	popd
     rlPhaseEnd
 
@@ -47,7 +72,12 @@ rlJournalStart
 	rlRun "su - htx" 0 "Executing HTX testsuite"
     rlPhaseEnd
 
-    # rlPhaseStartCleanup
-    # rlPhaseEnd
+    rlPhaseStartCleanup
+    	rlFileSubmit /tmp/htxstats
+	rlFileSubmit /tmp/htxerr
+	rlFileSubmit /tmp/htxmsg
+	rlFileSubmit /tmp/HTXScreenOutput
+	rlFileSubmit /tmp/htx.start.stop.time
+    rlPhaseEnd
 rlJournalPrintText
 rlJournalEnd
