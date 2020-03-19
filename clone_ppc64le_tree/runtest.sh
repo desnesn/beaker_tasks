@@ -54,8 +54,7 @@ rlJournalStart
 	fi
 
 	if [ $major == "7" ] ; then
-		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc python-devel newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-
-		devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux" 0 "Installing all dependencies to build upstream powerpc kernel on RHEL7"
+		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc python-devel newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux" 0 "Installing all dependencies to build upstream powerpc kernel on RHEL7"
 	elif [ $major == "8" ] ; then
 		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y gcc make git ctags ncurses-devel openssl-devel net-tools xmlto asciidoc newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel ncurses-devel hmaccalc zlib-devel binutils-devel elfutils-libelf-devel git bc gcc make git ctags openssl ncurses-devel openssl-devel glibc-static wget vim tmux kabi-dw python3-devel python3-docutils net-tools xmlto asciidoc python3-devel python3-docutils newt-devel perl\(ExtUtils::Embed\) elfutils-devel audit-libs-devel java-devel numactl-devel pciutils-devel hmaccalc binutils-devel kabi-dw ncurses-devel openssl-devel" 0 "Installing all dependencies to build upstream powerpc kernel on RHEL8"
 	else
