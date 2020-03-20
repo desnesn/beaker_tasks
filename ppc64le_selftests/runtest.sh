@@ -98,13 +98,13 @@ rlJournalStart
 		rlLog "Failed tests: $FAILED"
 		rlLog "Skipped tests: $SKIPPED"
 		
-		rlFileSubmit $SELFTESTSLOG
+		rlFileSubmit $SELFTESTSLOG SELFTESTS.LOG
 
 		cat $SELFTESTSLOG | grep PASS > $SELFTESTSPASS
 		cat $SELFTESTSLOG | grep FAIL > $SELFTESTSFAIL
 
-		rlFileSubmit $SELFTESTSPASS
-		rlFileSubmit $SELFTESTSFAIL
+		rlFileSubmit $SELFTESTSPASS SELFTESTS.PASS
+		rlFileSubmit $SELFTESTSFAIL SELFTESTS.FAIL
 	rlPhaseEnd
 	
 	rlPhaseStartCleanup
