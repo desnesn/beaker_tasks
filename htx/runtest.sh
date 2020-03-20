@@ -34,7 +34,7 @@ HTX_DIR="/root/HTX"
 rlJournalStart
     rlPhaseStartSetup
 	rlRun "yum groupinstall -y \"Development Tools\" && yum -y install git vim wget libcxl-devel libocxl-devel ncurses-devel net-tools" 0 "Downloading HTX build and install dependencies"
-	rlRun "git clone https://www.github.com/open-power/HTX.git" 0 "Cloning HTX git repo"
+	rlRun "git clone https://www.github.com/open-power/HTX.git $HTX_DIR" 0 "Cloning HTX git repo"
 	pushd $HTX_DIR
 
         if [ "$(cat /etc/redhat-release | grep -oh "Red Hat")" == "Red Hat" ]; then
@@ -78,6 +78,7 @@ rlJournalStart
 	rlFileSubmit /tmp/htxmsg
 	rlFileSubmit /tmp/HTXScreenOutput
 	rlFileSubmit /tmp/htx.start.stop.time
+	# rm -rf $HTX_DIR
     rlPhaseEnd
 rlJournalPrintText
 rlJournalEnd
