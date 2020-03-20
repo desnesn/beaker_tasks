@@ -33,6 +33,18 @@ HTX_DIR="/root/HTX"
 
 rlJournalStart
     rlPhaseStartSetup
+
+# 	if [ -z "$RUNTIME" ]; then
+# 		RUNTIME=86400
+# 	else
+# 		RUNTIME=$RUNTIME
+# 		# Verify the max amount of time the test can be run
+# 		if [ $SLEEPTIME -gt 356400 ]; then
+# 			RprtRslt $TEST/watchdog_exceeds_limit Warn $SLEEPTIME
+# 			SLEEPTIME=356400
+# 		fi
+# 	fi
+
 	rlRun "yum groupinstall -y \"Development Tools\" && yum -y install git vim wget libcxl-devel libocxl-devel ncurses-devel net-tools" 0 "Downloading HTX build and install dependencies"
 	rlRun "git clone https://www.github.com/open-power/HTX.git $HTX_DIR" 0 "Cloning HTX git repo"
 	pushd $HTX_DIR
@@ -73,7 +85,6 @@ rlJournalStart
 
     rlPhaseStartTest
 	rlRun "htxcmdline -run -mdt mdt.all" 0 "Executing HTX testsuite"
-	
     rlPhaseEnd
 
     rlPhaseStartCleanup
