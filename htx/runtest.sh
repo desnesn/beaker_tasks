@@ -61,10 +61,13 @@ rlJournalStart
 	sed -i "s/HTX_RELEASE=\"htxubuntu\"/HTX_RELEASE=\"${htx_str}\"/" htx.mk
 	sed -i 's/TOPDIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))/TOPDIR=\/root\/HTX/' htx.mk
 
-	rlRun "make clean && make all && make tar" 0 "Compiling HTX"
-	tar --touch -xvzf htx_package.tar.gz
-	cd htx_package
+	rlRun "make clean" 0 "Cleaning HTX"
+	rlRun "make all" 0 "Compiling HTX"
+	rlRun "make tar" 0 "Creating tar files for HTX"
+	rlRun "tar --touch -xvzf htx_package.tar.gz" 0 "Extracting HTX package"
+	pushd htx_package
 	rlRun "./installer.sh -f" 0 "Installing HTX"
+	popd
 	popd
     rlPhaseEnd
 
