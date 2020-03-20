@@ -72,15 +72,16 @@ rlJournalStart
     rlPhaseEnd
 
     rlPhaseStartTest
-	rlRun "su - htx" 0 "Executing HTX testsuite"
+	rlRun "htxcmdline -run -mdt mdt.all" 0 "Executing HTX testsuite"
+	
     rlPhaseEnd
 
     rlPhaseStartCleanup
-    	rlFileSubmit /tmp/htxstats
-	rlFileSubmit /tmp/htxerr
-	rlFileSubmit /tmp/htxmsg
-	rlFileSubmit /tmp/HTXScreenOutput
-	rlFileSubmit /tmp/htx.start.stop.time
+    	rlFileSubmit /tmp/htxstats htxstats
+	rlFileSubmit /tmp/htxerr htxerr
+	rlFileSubmit /tmp/htxmsg htxmsg
+	rlFileSubmit /tmp/HTXScreenOutput HTXScreenOutput
+	rlFileSubmit /tmp/htx.start.stop.time htx.start.stop.time
 	# rm -rf $HTX_DIR
     rlPhaseEnd
 rlJournalPrintText

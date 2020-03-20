@@ -66,8 +66,7 @@ rlJournalStart
     rlPhaseStartTest
         rlRun "git clone git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git $FOLDER" 0 "Cloning git powerpc tree"
 
-        rlAssertExists "$FOLDER"
-
+        # rlAssertExists "$FOLDER"
 	rlRun "pushd $FOLDER"
 	rlRun "git checkout --track -b fixes origin/fixes" 0 "Checking out fixes branch"
 	rlRun "git checkout --track -b next origin/next" 0 "Checkin out next branch"
