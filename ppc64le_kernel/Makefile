@@ -1,6 +1,6 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-#   Makefile of /kernel/powerpc_kernel/.
+#   Makefile of /kernel/ppc64le_kernel/.
 #   Description: Compile and Install latest upstream kernel
 #   Author: Desnes Augusto Nunes do Rosario <desnesn@br.ibm.com>
 #
@@ -23,7 +23,7 @@
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-export TEST=/kernel/powerpc_kernel/.
+export TEST=/kernel/ppc64le_kernel/.
 export TESTVERSION=1.0
 
 BUILT_FILES=
@@ -52,8 +52,8 @@ $(METADATA): Makefile
 	@echo "Description:     Compile and Install latest upstream kernel" >> $(METADATA)
 	@echo "Type:            Install" >> $(METADATA)
 	@echo "TestTime:        3h" >> $(METADATA)
-	@echo "RunFor:          powerpc_kernel" >> $(METADATA)
-	@echo "Requires:        powerpc_kernel" >> $(METADATA)
+	@echo "RunFor:          ppc64le_kernel" >> $(METADATA)
+	@echo "Requires:        ppc64le_kernel" >> $(METADATA)
 	@echo "Priority:        Normal" >> $(METADATA)
 	@echo "License:         GPLv2+" >> $(METADATA)
 	@echo "Confidential:    no" >> $(METADATA)

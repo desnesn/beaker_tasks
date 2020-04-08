@@ -2,7 +2,7 @@
 # vim: dict+=/usr/share/beakerlib/dictionary.vim cpt=.,w,b,u,t,i,k
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #
-#   runtest.sh of /tools/kernel_powerpc/.
+#   runtest.sh of /tools/ppc64le_kernel/.
 #   Description: Clones ppc64le git tree into the /root directory
 #   Author: John Doe <john.doe@email.com>
 #
