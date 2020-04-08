@@ -66,14 +66,12 @@ rlJournalStart
 	rlRun "yes | cp -f /boot/config-$(uname -r) .config" 0 "copy config"
 	rlRun "sed -i 's/CONFIG_LOCALVERSION=\"\"/CONFIG_LOCALVERSION=\"-master\"/' .config" 0
 	rlRun "sed -i 's/CONFIG_SYSTEM_TRUSTED_KEYS=\"certs\/rhel.pem\"/CONFIG_SYSTEM_TRUSTED_KEYS=\"\"/' .config" 0
+	rlRun "sed -i 's/CONFIG_DEBUG_INFO_BTF=y/# CONFIG_DEBUG_INFO_BTF is not set/' .config" 0
 	rlRun "make olddefconfig" 0 "make olddefconfig"
 	rlRun "make clean && make LOCALVERSION= -j$(nproc)" 0 "compile kernel"
 	rlRun "make modules_install && make install && grub2-mkconfig -o /boot/grub2/grub.cfg" 0 "install kernel"
 
 	rlRun "popd"
-
-	rlRun "kexec -l /boot/vmlinuz-$(grubby --default-kernel | cut -c 15-) --initrd=/boot/initramfs-$(grubby --default-kernel | cut -c 15-).img --append='$(cat /proc/cmdline)'" 0 "kexec setup"
-	rlRun "kexec -e" 0 "kexec -e"
 
     rlPhaseEnd
 
