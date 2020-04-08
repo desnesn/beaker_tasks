@@ -72,6 +72,9 @@ rlJournalStart
 
 	rlRun "popd"
 
+	rlRun "kexec -l /boot/vmlinuz-$(grubby --default-kernel | cut -c 15-) --initrd=/boot/initramfs-$(grubby --default-kernel | cut -c 15-).img --append='$(cat /proc/cmdline)'" 0 "kexec setup"
+	rlRun "kexec -e" 0 "kexec -e"
+
     rlPhaseEnd
 
     rlPhaseStartCleanup
