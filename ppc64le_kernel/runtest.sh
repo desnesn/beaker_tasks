@@ -68,8 +68,11 @@ rlJournalStart
 	rlRun "sed -i 's/CONFIG_SYSTEM_TRUSTED_KEYS=\"certs\/rhel.pem\"/CONFIG_SYSTEM_TRUSTED_KEYS=\"\"/' .config" 0
 	rlRun "sed -i 's/CONFIG_DEBUG_INFO_BTF=y/# CONFIG_DEBUG_INFO_BTF is not set/' .config" 0
 	rlRun "make olddefconfig" 0 "make olddefconfig"
-	rlRun "make clean && make LOCALVERSION= -j$(nproc)" 0 "compile kernel"
-	rlRun "make modules_install && make install && grub2-mkconfig -o /boot/grub2/grub.cfg" 0 "install kernel"
+	rlRun "make clean" 0 "cleaning kernel"
+	rlRun "make LOCALVERSION= -j$(nproc)" 0 "compiling kernel"
+	rlRun "make modules_install" 0 "intalling modules"
+	rlRun "make install" 0 "installing kernel"
+	rlRun "grub2-mkconfig -o /boot/grub2/grub.cfg" 0 "updating grub entries"
 
 	rlRun "popd"
 
