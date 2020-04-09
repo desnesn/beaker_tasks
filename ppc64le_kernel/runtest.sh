@@ -62,17 +62,17 @@ rlJournalStart
 	rlRun "git checkout --track -b next origin/next" 0 "Checkin out next branch"
 	rlRun "git checkout master" 0 "Checking out master branch again"
 
-	rlRun "git clean -xfd" 0 "clean"
-	rlRun "yes | cp -f /boot/config-$(uname -r) .config" 0 "copy config"
+	rlRun "git clean -xfd" 0
+	rlRun "yes | cp -f /boot/config-$(uname -r) .config" 0
 	rlRun "sed -i 's/CONFIG_LOCALVERSION=\"\"/CONFIG_LOCALVERSION=\"-master\"/' .config" 0
 	rlRun "sed -i 's/CONFIG_SYSTEM_TRUSTED_KEYS=\"certs\/rhel.pem\"/CONFIG_SYSTEM_TRUSTED_KEYS=\"\"/' .config" 0
 	rlRun "sed -i 's/CONFIG_DEBUG_INFO_BTF=y/# CONFIG_DEBUG_INFO_BTF is not set/' .config" 0
-	rlRun "make olddefconfig" 0 "make olddefconfig"
-	rlRun "make clean" 0 "cleaning kernel"
-	rlRun "make LOCALVERSION= -j$(nproc)" 0 "compiling kernel"
-	rlRun "make modules_install" 0 "intalling modules"
-	rlRun "make install" 0 "installing kernel"
-	rlRun "grub2-mkconfig -o /boot/grub2/grub.cfg" 0 "updating grub entries"
+	rlRun "make olddefconfig" 0
+	rlRun "make clean" 0
+	rlRun "make LOCALVERSION= -j$(nproc)" 0
+	rlRun "make modules_install" 0
+	rlRun "make install" 0
+	rlRun "grub2-mkconfig -o /boot/grub2/grub.cfg"
 
 	rlRun "popd"
 
