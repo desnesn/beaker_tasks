@@ -32,17 +32,10 @@ rlJournalStart
 
 	rlPhaseStartSetup
 
-		# first we need to install rpms needed to build the kernel	
-		rlRun "yum -y install asciidoc audit-libs-devel binutils-devel bison elfutils-devel flex gcc git m4 make ncurses-devel net-tools newt-devel numactl-devel openssl-devel pciutils-devel perl-Ext* perl-devel perl-generators"
+		# Install dependencies and other toools
+		rlRun "yum -y groupinstall -y \"Development Tools\""
 
-		# next we need the rpm needed to build the powerpc tests	
-	 	rlRun "python3-docutils xmlto xz-devel zlib-devel python3-devel rsync rpm-build java-devel kabi-dw libcap-devel libcap-ng-devel llvm-toolset"
-
-		# next we need the rpm needed to build the powerpc tests
-		rlRun "yum -y install glibc-static wget"
-
-		# other tools
-		rlRun "yum -y install vim dnf-utils tmux"
+		rlRun "yum -y install asciidoc audit-libs-devel bc binutils-devel bison clang ctags dnf-utils elfutils-devel elfutils-libelf-devel flex gcc git glibc-static hmaccalc java-devel kabi-dw kernel-debug kernel-debug-debuginfo libcap-devel libcap-ng-devel libmnl-devel llvm llvm-toolset m4 make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl-devel perl-Ext* perl\(ExtUtils::Embed\) perl-generators python3-devel python3-docutils rpm-build rsync tmux vim wget xmlto xz-devel zlib-devel"
 
 		if [ ! -f /etc/yum.repos.d/beaker-BaseOS-source.repo ]; then
 			cp /etc/yum.repos.d/beaker-BaseOS.repo /etc/yum.repos.d/beaker-BaseOS-source.repo
@@ -68,24 +61,27 @@ rlJournalStart
 	
 	rlPhaseStartTest
 		cd linux-${VERSION}-${RELEASE}/
+
 		# SELFTESTSLOG=$(mktemp /mnt/testarea/selftests.XXXXXX)
 		SELFTESTSLOG=/mnt/testarea/selftests.output
 		SELFTESTSPASS=/mnt/testarea/selftests.pass
 		SELFTESTSFAIL=/mnt/testarea/selftests.fail
+
 		# MAKELEVEL=0 is needed to fool the kernel's tools/testing/selftests/lib.mk
 		#   ifeq (0,$(MAKELEVEL))
 		#   OUTPUT := $(shell pwd)
 		#   endif
 		# A Beaker task starts with 'make run', thus MAKELEVEL=1 for the selftests,
 		# thus OUTPUT is not set, and the whole build fails.
+
 		rlRun "make -C tools/testing/selftests/powerpc run_tests MAKELEVEL=0 >>$SELFTESTSLOG 2>&1" 0 "Running powerpc selftests"
 		
-		if lscpu | grep -q 'POWER9';then
-			CPU=$(echo "POWER9 system" $SELFTESTLOG)
-		else
-			CPU=$(echo "POWER8 system" $SELFTESTLOG)
-		fi
-		HOSTNAME=$(echo `hostname` $SELFTESTLOG)
+		CPU=$(lscpu | grep "Model name" | awk '{ print $3 }' | sed 's/,//')
+		echo $CPU >> $SELFTESTLOG
+
+		HOSTNAME=$(hostname)
+		echo $HOSTNAME >> $SELFTESTLOG
+
 		PASSED=$(grep -c 'PASS' $SELFTESTSLOG)
 		FAILED=$(grep -c 'FAIL' $SELFTESTSLOG)
 		SKIPPED=$(grep -c 'SKIP' $SELFTESTSLOG)
@@ -108,7 +104,8 @@ rlJournalStart
 	rlPhaseEnd
 	
 	rlPhaseStartCleanup
-		rm -fr $HOME/rpmbuild
+		#rm -fr $HOME/rpmbuild
+		rlLog "== End of powerpc selftest execution =="
 	rlPhaseEnd
 
 	rlJournalPrintText
