@@ -81,7 +81,7 @@ rlJournalStart
 		# thus OUTPUT is not set, and the whole build fails.
 
 		# Run selftests
-		rlRun "make MAKELEVEL=0 -C tools/testing/selftests/powerpc run_tests >>$SELFTESTSLOG 2>&1" 0 "Running powerpc selftests"
+		rlRun "make -C tools/testing/selftests/powerpc run_tests MAKELEVEL=0 >>$SELFTESTSLOG 2>&1" 0 "Running powerpc selftests"
 
 		CPU=$(lscpu | grep "Model name" | awk '{ print $3 }' | sed 's/,//')
 		echo >> $SELFTESTLOG
