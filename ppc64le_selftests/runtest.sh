@@ -84,14 +84,14 @@ rlJournalStart
 		rlRun "make -C tools/testing/selftests/powerpc run_tests MAKELEVEL=0 >>$SELFTESTSLOG 2>&1" 0 "Running powerpc selftests"
 
 		CPU=$(lscpu | grep "Model name" | awk '{ print $3 }' | sed 's/,//')
-		echo "" >> $SELFTESTLOG
-		echo "$CPU" >> $SELFTESTLOG
-		echo "" >> $SELFTESTLOG
+		echo >> $SELFTESTLOG 2>&1
+		echo $CPU >> $SELFTESTLOG 2>&1
+		echo >> $SELFTESTLOG 2>&1
 
 		HOSTNAME=$(hostname)
-		echo "" >> $SELFTESTLOG
-		echo "$HOSTNAME" >> $SELFTESTLOG
-		echo "" >> $SELFTESTLOG
+		echo >> $SELFTESTLOG 2>&1
+		echo $HOSTNAME >> $SELFTESTLOG 2>&1
+		echo >> $SELFTESTLOG 2>&1
 
 		N_PASSED=$(grep -c 'PASS' $SELFTESTSLOG)
 		N_FAILED=$(grep -c 'FAIL' $SELFTESTSLOG)
@@ -105,9 +105,9 @@ rlJournalStart
 		rlLog "Failed tests: $N_FAILED"
 		rlLog "Skipped tests: $N_SKIPPED"
 		
-		grep "^ok" $SELFTESTSLOG | awk '{print $3$4" "$5}' >> $SELFTESTSPASS
-		grep "^not ok" $SELFTESTSLOG | awk '{print $4$5" "$6" "$7$8" "$9}' >> $SELFTESTSFAIL
-		grep "skip:" $SELFTESTSLOG | awk '{print $3}' >> $SELFTESTSSKIP
+		grep "^ok" $SELFTESTSLOG | awk '{print $3$4" "$5}' >> $SELFTESTSPASS 2>&1
+		grep "^not ok" $SELFTESTSLOG | awk '{print $4$5" "$6" "$7$8" "$9}' >> $SELFTESTSFAIL 2>&1
+		grep "skip:" $SELFTESTSLOG | awk '{print $3}' >> $SELFTESTSSKIP 2>&1
 
 		rlFileSubmit $SELFTESTSLOG SELFTESTS.LOG
 		rlFileSubmit $SELFTESTSPASS SELFTESTS.PASS
