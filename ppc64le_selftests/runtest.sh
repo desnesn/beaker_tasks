@@ -113,7 +113,7 @@ rlJournalStart
 		rlRun "sed -i 's/ok/pass:/g' $SELFTESTSPASS"
 		rlRun "grep \"^not ok\" $SELFTESTSLOG | awk '{print \$1\" \"\$2\" \"\$4\$5\" \"\$6\" \"\$7\$8\" \"\$9}' >> $SELFTESTSFAIL"
 		rlRun "sed -i 's/not ok/fail:/g' $SELFTESTSFAIL"
-		rlRun "grep \"skip:\" $SELFTESTSLOG | awk '{print \$3}' >> $SELFTESTSSKIP"
+		rlRun "grep \"skip:\" $SELFTESTSLOG | awk '{print \$2\" \"\$3}' >> $SELFTESTSSKIP"
 
 		rlFileSubmit $SELFTESTSLOG SELFTESTS.LOG
 		rlFileSubmit $SELFTESTSPASS SELFTESTS.PASS
