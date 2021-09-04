@@ -119,10 +119,14 @@ rlJournalStart
 		rlRun "sed -i 's/not ok/fail:/g' $SELFTESTSFAIL"
 		rlRun "grep \"skip:\" $SELFTESTSLOG | awk '{print \$2\" \"\$3}' >> $SELFTESTSSKIP"
 
+		DMESG=$(mktemp /mnt/testarea/dmesg.XXXXXX)
+		dmesg > $DMESG
+
 		rlFileSubmit $SELFTESTSLOG SELFTESTS.LOG
 		rlFileSubmit $SELFTESTSPASS SELFTESTS.PASS
 		rlFileSubmit $SELFTESTSFAIL SELFTESTS.FAIL
 		rlFileSubmit $SELFTESTSSKIP SELFTESTS.SKIP
+		rlFileSubmit $DMESG dmesg
 
 		if [ $N_FAILED -ne 0 ]; then
 			rlFail "Selftests failures were encountered - Please look at SELFTESTS.FAIL"
