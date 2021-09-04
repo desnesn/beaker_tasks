@@ -67,7 +67,7 @@ rlJournalStart
 		pushd linux-${VERSION}-${RELEASE}/
 
 		# SELFTESTSLOG=$(mktemp /mnt/testarea/selftests.XXXXXX)
-		SELFTESTSLOG=/mnt/testarea/selftests.output
+		SELFTESTSLOG=/mnt/testarea/selftests.log
 
 		SELFTESTSPASS=/mnt/testarea/selftests.pass
 		SELFTESTSFAIL=/mnt/testarea/selftests.fail
@@ -84,14 +84,14 @@ rlJournalStart
 		rlRun "make -C tools/testing/selftests/powerpc run_tests MAKELEVEL=0 >>$SELFTESTSLOG 2>&1" 0 "Running powerpc selftests"
 
 		CPU=$(lscpu | grep "Model name" | awk '{ print $3 }' | sed 's/,//')
-		rlRun "echo >> $SELFTESTLOG"
-		rlRun "echo $CPU >> $SELFTESTLOG"
-		rlRun "echo >> $SELFTESTLOG"
+		rlRun "echo >> $SELFTESTSLOG"
+		rlRun "echo $CPU >> $SELFTESTSLOG"
+		rlRun "echo >> $SELFTESTSLOG"
 
 		HOSTNAME=$(hostname)
-		rlRun "echo >> $SELFTESTLOG"
-		rlRun "echo $HOSTNAME >> $SELFTESTLOG"
-		rlRun "echo >> $SELFTESTLOG"
+		rlRun "echo >> $SELFTESTSLOG"
+		rlRun "echo $HOSTNAME >> $SELFTESTSLOG"
+		rlRun "echo >> $SELFTESTSLOG"
 
 		N_PASSED=$(grep -c 'PASS' $SELFTESTSLOG)
 		N_FAILED=$(grep -c 'FAIL' $SELFTESTSLOG)
@@ -112,6 +112,7 @@ rlJournalStart
 		rlFileSubmit $SELFTESTSLOG SELFTESTS.LOG
 		rlFileSubmit $SELFTESTSPASS SELFTESTS.PASS
 		rlFileSubmit $SELFTESTSFAIL SELFTESTS.FAIL
+		rlFileSubmit $SELFTESTSSKIP SELFTESTS.SKIP
 
 		popd
 
