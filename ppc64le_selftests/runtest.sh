@@ -67,7 +67,7 @@ rlJournalStart
 		pushd linux-${VERSION}-${RELEASE}/
 
 		# SELFTESTSLOG=$(mktemp /mnt/testarea/selftests.XXXXXX)
-		SELFTESTSLOG=/mnt/testarea/selftests.log
+		SELFTESTSLOG=/mnt/testarea/selftests.output
 
 		SELFTESTSPASS=/mnt/testarea/selftests.pass
 		SELFTESTSFAIL=/mnt/testarea/selftests.fail
