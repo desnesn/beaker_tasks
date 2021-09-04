@@ -84,14 +84,14 @@ rlJournalStart
 		rlRun "make -C tools/testing/selftests/powerpc run_tests MAKELEVEL=0 >>$SELFTESTSLOG 2>&1" 0 "Running powerpc selftests"
 
 		CPU=$(lscpu | grep "Model name" | awk '{ print $3 }' | sed 's/,//')
-		echo >> $SELFTESTLOG
-		echo $CPU >> $SELFTESTLOG
-		echo >> $SELFTESTLOG
+		echo "" >> $SELFTESTLOG
+		echo "$CPU" >> $SELFTESTLOG
+		echo "" >> $SELFTESTLOG
 
 		HOSTNAME=$(hostname)
-		echo >> $SELFTESTLOG
-		echo $HOSTNAME >> $SELFTESTLOG
-		echo >> $SELFTESTLOG
+		echo "" >> $SELFTESTLOG
+		echo "$HOSTNAME" >> $SELFTESTLOG
+		echo "" >> $SELFTESTLOG
 
 		N_PASSED=$(grep -c 'PASS' $SELFTESTSLOG)
 		N_FAILED=$(grep -c 'FAIL' $SELFTESTSLOG)
