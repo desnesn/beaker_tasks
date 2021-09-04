@@ -33,9 +33,9 @@ rlJournalStart
 	rlPhaseStartSetup
 
 		# Install dependencies and other toools
-		rlRun "yum -y groupinstall -y \"Development Tools\""
+		rlRun "yum -y groupinstall -y \"Development Tools\" &> /dev/null"
 
-		rlRun "yum -y install asciidoc audit-libs-devel bc binutils-devel bison clang ctags dnf-utils elfutils-devel elfutils-libelf-devel flex gcc git glibc-static hmaccalc java-devel kabi-dw kernel-debug kernel-debug-debuginfo libcap-devel libcap-ng-devel libmnl-devel llvm llvm-toolset m4 make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl-devel perl-Ext* perl\(ExtUtils::Embed\) perl-generators python3-devel python3-docutils rpm-build rsync tmux vim wget xmlto xz-devel zlib-devel"
+		rlRun "yum -y install asciidoc audit-libs-devel bc binutils-devel bison clang ctags dnf-utils elfutils-devel elfutils-libelf-devel flex gcc git glibc-static hmaccalc java-devel kabi-dw kernel-debug kernel-debug-debuginfo libcap-devel libcap-ng-devel libmnl-devel llvm llvm-toolset m4 make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl-devel perl-Ext* perl\(ExtUtils::Embed\) perl-generators python3-devel python3-docutils rpm-build rsync tmux vim wget xmlto xz-devel zlib-devel &> /dev/null"
 
 		# Setup the src repo
 		if [ ! -f /etc/yum.repos.d/beaker-BaseOS-source.repo ]; then
@@ -54,17 +54,17 @@ rlJournalStart
 		VERSION=${UNAME[0]}
 		RELEASE=${UNAME[1]%%.$ARCH}
 
-		rlRun "yumdownloader --source kernel" 0 "Downloading kernel source rpm"
+		rlRun "yumdownloader --source kernel &> /dev/null" 0 "Downloading kernel source rpm"
 		
-		rlRun "rpm -ivh kernel-${VERSION}-${RELEASE}.src.rpm" 0 "Installing kernel source rpm"
-		pushd $HOME/rpmbuild/SOURCES
+		rlRun "rpm -ivh kernel-${VERSION}-${RELEASE}.src.rpm &> /dev/null" 0 "Installing kernel source rpm"
+		pushd $HOME/rpmbuild/SOURCES &> /dev/null
 		tar -xf linux-${VERSION}-${RELEASE}.tar.xz
 
 	rlPhaseEnd
 	
 	rlPhaseStartTest
 
-		pushd linux-${VERSION}-${RELEASE}/
+		pushd linux-${VERSION}-${RELEASE}/ &> /dev/null
 
 		# SELFTESTSLOG=$(mktemp /mnt/testarea/selftests.XXXXXX)
 		SELFTESTSLOG=/mnt/testarea/selftests.log
@@ -81,15 +81,19 @@ rlJournalStart
 		# thus OUTPUT is not set, and the whole build fails.
 
 		echo >> $SELFTESTSLOG
+		echo "############################" >> $SELFTESTSLOG
 		echo "# PPC64LE KERNEL SELFTESTS #" >> $SELFTESTSLOG
+		echo "############################" >> $SELFTESTSLOG
 		echo >> $SELFTESTSLOG
 
-		CPU=$(lscpu | grep "Model")
+		MODEL=$(lscpu | grep "Model:")
+		MODEL_NAME=$(lscpu | grep "Model name:")
 		echo >> $SELFTESTSLOG
-		echo $CPU >> $SELFTESTSLOG
+		echo $MODEL >> $SELFTESTSLOG
 		echo >> $SELFTESTSLOG
+		echo $MODEL_NAME >> $SELFTESTSLOG
 
-		HOSTNAME=$(hostname)
+		HOSTNAME=$(hostname --fqdn)
 		echo >> $SELFTESTSLOG
 		echo $HOSTNAME >> $SELFTESTSLOG
 		echo >> $SELFTESTSLOG
@@ -119,6 +123,10 @@ rlJournalStart
 		rlFileSubmit $SELFTESTSPASS SELFTESTS.PASS
 		rlFileSubmit $SELFTESTSFAIL SELFTESTS.FAIL
 		rlFileSubmit $SELFTESTSSKIP SELFTESTS.SKIP
+
+		if [ $N_FAILED -ne 0 ]; then
+			rlFail "Selftests failures were encountered - Please look at SELFTESTS.FAIL"
+		fi
 
 		popd
 
