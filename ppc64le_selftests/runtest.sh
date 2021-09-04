@@ -80,34 +80,40 @@ rlJournalStart
 		# A Beaker task starts with 'make run', thus MAKELEVEL=1 for the selftests,
 		# thus OUTPUT is not set, and the whole build fails.
 
-		# Run selftests
-		rlRun "make -C tools/testing/selftests/powerpc run_tests MAKELEVEL=0 >>$SELFTESTSLOG 2>&1" 0 "Running powerpc selftests"
+		echo >> $SELFTESTSLOG
+		echo "# PPC64LE KERNEL SELFTESTS #" >> $SELFTESTSLOG
+		echo >> $SELFTESTSLOG
 
-		CPU=$(lscpu | grep "Model name" | awk '{ print $3 }' | sed 's/,//')
-		rlRun "echo >> $SELFTESTSLOG"
-		rlRun "echo $CPU >> $SELFTESTSLOG"
-		rlRun "echo >> $SELFTESTSLOG"
+		CPU=$(lscpu | grep "Model")
+		echo >> $SELFTESTSLOG
+		echo $CPU >> $SELFTESTSLOG
+		echo >> $SELFTESTSLOG
 
 		HOSTNAME=$(hostname)
-		rlRun "echo >> $SELFTESTSLOG"
-		rlRun "echo $HOSTNAME >> $SELFTESTSLOG"
-		rlRun "echo >> $SELFTESTSLOG"
+		echo >> $SELFTESTSLOG
+		echo $HOSTNAME >> $SELFTESTSLOG
+		echo >> $SELFTESTSLOG
 
-		N_PASSED=$(grep -c 'PASS' $SELFTESTSLOG)
-		N_FAILED=$(grep -c 'FAIL' $SELFTESTSLOG)
-		N_SKIPPED=$(grep -c 'SKIP' $SELFTESTSLOG)
+		# Run selftests
+		rlRun "make -C tools/testing/selftests/powerpc run_tests MAKELEVEL=0 >>$SELFTESTSLOG 2>&1" 0 "Running powerpc selftests"
+		N_PASSED=$(grep -c '^ok' $SELFTESTSLOG)
+		N_FAILED=$(grep -c '^not ok' $SELFTESTSLOG)
+		N_SKIPPED=$(grep -c '# skip:' $SELFTESTSLOG)
 		
 		# rlAssert0 "Assert 0 tests failed" $N_FAILED
-		
-		rlLog "$CPU"
+
+		PROC=$(lscpu | grep "Model" | awk '{ print $3 }' | sed 's/,//')
+		rlLog "$PROC"
 		rlLog "$HOSTNAME"
 		rlLog "Passed tests: $N_PASSED"
 		rlLog "Failed tests: $N_FAILED"
 		rlLog "Skipped tests: $N_SKIPPED"
 		
-		rlRun "grep \"^ok\" $SELFTESTSLOG | awk '{print $3$4\" \"$5}' >> $SELFTESTSPASS"
-		rlRun "grep \"^not ok\" $SELFTESTSLOG | awk '{print $4$5\" \"$6\" \"$7$8\" \"$9}' >> $SELFTESTSFAIL"
-		rlRun "grep \"skip:\" $SELFTESTSLOG | awk '{print $3}' >> $SELFTESTSSKIP"
+		rlRun "grep \"^ok\" $SELFTESTSLOG | awk '{print \$1\" \"\$3\$4\" \"\$5}' >> $SELFTESTSPASS"
+		rlRun "sed -i 's/ok/pass:/g' $SELFTESTSPASS"
+		rlRun "grep \"^not ok\" $SELFTESTSLOG | awk '{print \$1\" \"\$2\" \"\$4\$5\" \"\$6\" \"\$7\$8\" \"\$9}' >> $SELFTESTSFAIL"
+		rlRun "sed -i 's/not ok/fail:/g' $SELFTESTSFAIL"
+		rlRun "grep \"skip:\" $SELFTESTSLOG | awk '{print \$3}' >> $SELFTESTSSKIP"
 
 		rlFileSubmit $SELFTESTSLOG SELFTESTS.LOG
 		rlFileSubmit $SELFTESTSPASS SELFTESTS.PASS
