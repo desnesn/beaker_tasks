@@ -35,7 +35,14 @@ rlJournalStart
 		# Install dependencies and other toools
 		rlRun "yum -y groupinstall -y \"Development Tools\" &> /dev/null"
 
-		rlRun "yum -y install asciidoc audit-libs-devel bc binutils-devel bison clang ctags dnf-utils elfutils-devel elfutils-libelf-devel flex gcc git glibc-static hmaccalc java-devel kabi-dw kernel-debug kernel-debug-debuginfo libcap-devel libcap-ng-devel libmnl-devel llvm llvm-toolset m4 make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl-devel perl-Ext* perl\(ExtUtils::Embed\) perl-generators python3-devel python3-docutils rpm-build rsync tmux vim wget xmlto xz-devel zlib-devel &> /dev/null"
+		# RHEL7
+		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y asciidoc audit-libs-devel bc binutils-devel ctags elfutils-devel elfutils-libelf-devel gcc git glibc-static hmaccalc java-devel kernel-debug kernel-debug-debuginfo make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl\(ExtUtils::Embed\) python-devel python-docutils tmux vim wget xmlto zlib-devel &> /dev/null"
+
+		# RHEL8
+		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y asciidoc audit-libs-devel bc binutils-devel bison clang ctags dnf-utils dwarves elfutils-devel elfutils-libelf-devel flex gcc git glibc-static hmaccalc java-devel kabi-dw kernel-debug kernel-debug-debuginfo libcap-devel libcap-ng-devel libmnl-devel libbabeltrace-devel libbpf-devel llvm llvm-toolset m4 make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl-devel perl-Ext* perl\(ExtUtils::Embed\) perl-generators python3-devel python3-docutils rpm-build rsync tmux vim wget xmlto xz-devel zlib-devel &> /dev/null"
+
+		# RHEL9
+		rlRun "yum groupinstall -y \"Development Tools\" && yum -y install glibc-static iproute-tc iproute-tc ncurses-devel python3-devel nmap-ncat &> /dev/null"
 
 		# Setup the src repo
 		if [ ! -f /etc/yum.repos.d/beaker-BaseOS-source.repo ]; then
