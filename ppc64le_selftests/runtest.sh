@@ -33,16 +33,19 @@ rlJournalStart
 	rlPhaseStartSetup
 
 		# Install dependencies and other toools
-		rlRun "yum -y groupinstall -y \"Development Tools\" &> /dev/null"
 
-		# RHEL7
-		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y asciidoc audit-libs-devel bc binutils-devel ctags elfutils-devel elfutils-libelf-devel gcc git glibc-static hmaccalc java-devel kernel-debug kernel-debug-debuginfo make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl\(ExtUtils::Embed\) python-devel python-docutils tmux vim wget xmlto zlib-devel &> /dev/null"
+		major=$(rpm -q --qf "%{version}" -f /etc/redhat-release | cut -c -1)
 
-		# RHEL8
-		rlRun "yum groupinstall -y \"Development Tools\" && yum install -y asciidoc audit-libs-devel bc binutils-devel bison clang ctags dnf-utils dwarves elfutils-devel elfutils-libelf-devel flex gcc git glibc-static hmaccalc java-devel kabi-dw kernel-debug kernel-debug-debuginfo libcap-devel libcap-ng-devel libmnl-devel libbabeltrace-devel libbpf-devel llvm llvm-toolset m4 make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl-devel perl-Ext* perl\(ExtUtils::Embed\) perl-generators python3-devel python3-docutils rpm-build rsync tmux vim wget xmlto xz-devel zlib-devel &> /dev/null"
-
-		# RHEL9
-		rlRun "yum groupinstall -y \"Development Tools\" && yum -y install glibc-static iproute-tc iproute-tc ncurses-devel python3-devel nmap-ncat &> /dev/null"
+		if [ $major -eq 7 ]; then
+			# RHEL7
+			rlRun "yum groupinstall -y \"Development Tools\" && yum install -y asciidoc audit-libs-devel bc binutils-devel ctags elfutils-devel elfutils-libelf-devel gcc git glibc-static hmaccalc java-devel kernel-debug kernel-debug-debuginfo make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl\(ExtUtils::Embed\) python-devel python-docutils tmux vim wget xmlto zlib-devel &> /dev/null"
+		elif [[ $major -eq 8 ]]; then
+			# RHEL8
+			rlRun "yum groupinstall -y \"Development Tools\" && yum install -y asciidoc audit-libs-devel bc binutils-devel bison clang ctags dnf-utils dwarves elfutils-devel elfutils-libelf-devel flex gcc git glibc-static hmaccalc java-devel kabi-dw kernel-debug kernel-debug-debuginfo libcap-devel libcap-ng-devel libmnl-devel libbabeltrace-devel libbpf-devel llvm llvm-toolset m4 make ncurses-devel net-tools newt-devel numactl-devel openssl openssl-devel pciutils-devel perl-devel perl-Ext* perl\(ExtUtils::Embed\) perl-generators python3-devel python3-docutils rpm-build rsync tmux vim wget xmlto xz-devel zlib-devel &> /dev/null"
+		else
+			# RHEL9
+			rlRun "yum groupinstall -y \"Development Tools\" && yum -y install glibc-static iproute-tc iproute-tc ncurses-devel python3-devel nmap-ncat &> /dev/null"
+		fi
 
 		# Setup the src repo
 		if [ ! -f /etc/yum.repos.d/beaker-BaseOS-source.repo ]; then
